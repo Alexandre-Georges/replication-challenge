@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Macho</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style type="text/css">
+        /* Fonts */
+        @font-face {
+            font-family: "OpenSans Light";
+            src: url("./fonts/Open_sans/OpenSans-Light-webfont.ttf");
+        }
+        @font-face {
+            font-family: "OpenSans Regular";
+            src: url("./fonts/Open_sans/OpenSans-Regular-webfont.ttf");
+        }
+        @font-face {
+            font-family: "OpenSans Bold";
+            src: url("./fonts/Open_sans/OpenSans-Bold-webfont.ttf");
+        }
+
+        /* Component styles */
+        * {
+            font-family: "OpenSans Regular";
+        }
+        a {
+            color: black;
+        }
+        a:hover, a:active, a:focus {
+            color: #eb6662;
+            text-decoration: none;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        img {
+            width: 100%;
+        }
+        button {
+            border-radius: 25px !important;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            display: inline-block;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            background-color: white;
+            transition: transform 300ms ease;
+        }
+        header nav {
+            width: 100%;
+            letter-spacing: 0.1em;
+            text-align: center;
+        }
+        header .logo {
+            font-size: 2em;
+            vertical-align: middle;
+        }
+
+        /* General styles */
+        .clearfix {
+            clear: both;
+        }
+        .display-table {
+            display: table;
+        }
+        .display-row {
+            display: table-row;
+        }
+        .display-cell {
+            display: table-cell;
+            text-align: center;
+        }
+        .btn:focus, .btn:active:focus, a:focus {
+            outline: none;
+        }
+        .btn:active {
+            box-shadow: none;
+        }
+        .carousel-caption p, .carousel-caption button {
+            margin-top: 2vh;
+        }
+        .carousel-caption button {
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 1vh 4vw;
+            font-size: 0.8em;
+            transition: all 300ms ease;
+        }
+        .carousel-caption button:hover {
+            background-color: rgba(255, 255, 255, 1);
+            color: black;
+        }
+        .title {
+            display: flex;
+            align-items: center;
+            padding: 1em 0;
+        }
+        .title h2 {
+            display: inline-block;
+            margin-left: 33%;
+            width: 33%;
+            text-align: center;
+        }
+        .vignette {
+            padding: 0;
+            color: transparent;
+            transition: all 500ms ease;
+        }
+        .vignette:hover {
+            color: white;
+        }
+        .vignette img {
+            transition: all 500ms ease;
+        }
+        .vignette:hover img {
+            filter: brightness(0.4);
+        }
+        .vignette .text-hover-photo {
+            position: absolute;
+            top: 0;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
+        }
+        .vignette .text-hover-photo > div {
+            margin: 0 auto;
+            width: 90%;
+        }
+
+        /* Framework styles */
+        .row {
+            margin: 0;
+        }
+        .container-fluid {
+            padding: 0;
+        }
+        .carousel {
+            clear: both;
+        }
+        .carousel-caption {
+            position: absolute;
+            top: 0;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        #panel {
+            background-color: white;
+        }
+        .slideout-menu {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 0;
+            width: 256px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: none;
+        }
+
+        .slideout-panel {
+            position:relative;
+            z-index: 1;
+            will-change: transform;
+        }
+        .slideout-open,
+        .slideout-open body,
+        .slideout-open .slideout-panel {
+            overflow: hidden;
+        }
+        .slideout-open .slideout-menu {
+            display: block;
+        }
+        .fixed {
+            backface-visibility: hidden;
+            position: fixed;
+            z-index:2;
+            transition: transform 300ms ease;
+        }
+        .fixed-open {
+            transform: translate3d(256px, 0px, 0px);
+        }
+
+        /* Local styles */
+        #mobile-menu {
+            display: none;
+            background-color: #eb6662;
+        }
+        #mobile-menu li {
+            display: block;
+        }
+        #mobile-menu a {
+            display: block;
+            padding-left: 1em;
+            font-size: 1.7em;
+            line-height: 3em;
+            border-bottom: 1px solid white;
+        }
+        #mobile-menu a:active, #mobile-menu a:hover, #mobile-menu a:focus {
+            background-color: white;
+            color: black;
+        }
+
+        #content {
+            margin-top: 70px;
+        }
+
+        #mobile-header #hamburger {
+            margin: 0 2vw;
+            font-size: 4em;
+            cursor: pointer;
+        }
+        #desktop-header {
+            display: none;
+            padding: 2.5vh 0;
+        }
+        #desktop-header .logo {
+            float: left;
+            margin: 0 7vw;
+            font-size: 1.4em;
+        }
+        #desktop-header ul {
+            float: right;
+            font-size: 0.8em;
+        }
+        #desktop-header li {
+            padding: 0 3vw;
+        }
+        #desktop-header .contact-button {
+            font-size: inherit;
+            letter-spacing: inherit;
+            background-color: transparent;
+            border: 2px #eb6662 solid;
+            vertical-align: baseline;
+            transition: all 300ms ease;
+        }
+        #desktop-header .contact-button:hover {
+            background-color: #eb6662;
+            color: white;
+        }
+
+        #macho-app > div {
+            display: flex;
+            align-items: center;
+        }
+        #macho-app .app-content {
+            margin: 2em 3em;
+            text-align: center;
+        }
+        #macho-app p {
+            font-family: "OpenSans Light";
+            color: darkgrey;
+        }
+        #macho-app h2 {
+            margin-bottom: 1.3em;
+        }
+        #macho-app button {
+            margin-top: 1em;
+            background-color: #eb6662;
+            color: white;
+            border: 1px solid #eb6662;
+            padding: 1em 2em;
+            transition: all 300ms ease;
+        }
+        #macho-app button:hover {
+            background-color: transparent;
+            color: black;
+        }
+        #macho-app img {
+            display: none;
+            width: 50%;
+        }
+
+        #projects .title {
+            background-color: #f4f4f4;
+        }
+        #projects .title a {
+            display: inline-block;
+            width: 33%;
+            text-align: center;
+        }
+        #team .vignette .text-hover-photo {
+            align-items: flex-end;
+            padding-bottom: 1em;
+            text-align: left;
+        }
+        #team .vignette h2 {
+            margin-bottom: 0;
+            letter-spacing: 0.2em;
+            font-size: 0.9em;
+            font-family: "OpenSans Bold";
+        }
+        #team .vignette span {
+            display: block;
+            font-size: 0.8em;
+            color: transparent;
+            transition: all 500ms ease;
+        }
+        #team .vignette:hover span {
+            color: lightgray;
+        }
+
+        #about div {
+            padding: 0;
+        }
+        #about #about-us {
+            height: 400px;
+            display: flex;
+            align-items: center;
+            background-color: #0889ff;
+            color: white;
+        }
+        #about #about-us > div {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        #about h2 {
+            margin-bottom: 2em;
+        }
+        #about p {
+            font-family: "OpenSans Light";
+        }
+        #about button {
+            margin-top: 5em;
+            font-size: 0.7em;
+            font-family: "OpenSans Light";
+            letter-spacing: 0.1em;
+            padding: 1em 4em;
+            border: 1px solid white;
+            background-color: transparent;
+            color: white;
+            transition: all 500ms ease;
+        }
+        #about button:hover {
+            color: black;
+            background-color: white;
+        }
+        #about #map {
+            height: 400px;
+        }
+
+        #footer {
+            background-color: #1b1b1b;
+        }
+        #footer #mobile-footer {
+            margin: 2em auto;
+            width: 60%;
+        }
+        #footer #mobile-footer .display-cell {
+            width: 33%;
+        }
+        #footer #mobile-footer img {
+            width: auto;
+        }
+        #footer #desktop-footer {
+            display: none;
+            width: 90%;
+            margin: 0.5em auto;
+        }
+        #footer #desktop-footer .footer-logo {
+            padding: 1.5em 0;
+            font-size: 1.3em;
+            color: white;
+            border-bottom: 1px solid #464646;
+        }
+        #footer #desktop-footer #footer-links {
+            width: 100%;
+            margin: 1.5em 0 2em;
+        }
+        #footer #desktop-footer nav {
+            float: left;
+        }
+        #footer #desktop-footer nav a {
+            margin-right: 2em;
+        }
+        #footer #desktop-footer #social-networks {
+            float: right;
+        }
+        #footer #desktop-footer #social-networks a {
+            display: inline-block;
+            margin-left: 4em;
+        }
+        #footer #desktop-footer #social-networks img {
+            width: 1.5em;
+        }
+        #footer #desktop-footer #footer-links a {
+            color: #cbcbcb;
+        }
+        #footer #desktop-footer #footer-links a:hover {
+            color: #eb6662;
+        }
+        @media (max-width: 767px) {
+            h2 {
+                margin: 10px 0;
+            }
+            .carousel-caption p, .carousel-caption button {
+                margin-top: 1vh;
+            }
+            .title h2 {
+                margin-left: 25%;
+                width: 50%;
+            }
+            #projects .title a {
+                width: 25%;
+            }
+        }
+        @media (min-width: 768px) {
+            .carousel-caption p, .carousel-caption button {
+                margin-top: 4vh;
+            }
+            .carousel-caption {
+                left: 30%;
+                right: 30%;
+            }
+        }
+        @media (min-width: 992px) {
+            .carousel-caption p, .carousel-caption button {
+                margin-top: 6vh;
+            }
+            .carousel-caption {
+                font-size: 1.2em;
+            }
+            .vignette .text-hover-photo > div {
+                width: 80%;
+            }
+
+            #mobile-header {
+                display: none;
+            }
+            #desktop-header {
+                display: flex;
+            }
+
+            #macho-app {
+                margin-left: 12%;
+                margin-right: 12%;
+            }
+            #macho-app .app-content {
+                text-align: left;
+                margin-right: 0;
+            }
+            #macho-app p {
+                font-size: 0.9em;
+            }
+            #macho-app img {
+                display: block;
+            }
+
+            #about #about-us h2 {
+                margin-bottom: 1em;
+            }
+            #about #about-us button {
+                margin-top: 2em;
+            }
+
+            #footer #mobile-footer {
+                display: none;
+            }
+            #footer #desktop-footer {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="mobile-menu">
+        <ul>
+            <li><a href="#macho-app"><span>PRODUCT</span></a></li>
+            <li><a href="#projects"><span>WORKS</span></a></li>
+            <li><a href="#team"><span>TEAM</span></a></li>
+            <li><a href="#about"><span>ABOUT</span></a></li>
+            <li><a href="mailto:hello@ottono.com"><span>CONTACT</span></a></li>
+        </ul>
+    </nav>
+    <header id="mobile-header">
+        <span id="hamburger">&#9776;</span>
+        <nav>
+            <a class="logo" href="#">MACHO</a>
+        </nav>
+    </header>
+    <header id="desktop-header">
+        <nav>
+            <a class="logo" href="#">MACHO</a>
+            <ul>
+                <li><a href="#macho-app"><span>PRODUCT</span></a></li>
+                <li><a href="#projects"><span>WORKS</span></a></li>
+                <li><a href="#team"><span>TEAM</span></a></li>
+                <li><a href="#about"><span>ABOUT</span></a></li>
+                <li><a href="mailto:hello@ottono.com"><button type="button" class="btn contact-button">CONTACT</button></a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="panel" class="container-fluid">
+        <div id="content">
+            <div id="product" class="carousel slide" data-ride="carousel" data-interval="false">
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <img src="./images/photo-1440439307159-c3afc8a8e4ff.jpeg" alt="Awesome image 1">
+                        <div class="carousel-caption">
+                            <div>
+                                <h2>Sem Tortor Mollis Aenean</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt egestas consequat.</p>
+                                <button type="button" class="btn">EXPLORE</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img src="./images/photo-1455596120412-30a2e6c8e600.jpeg" alt="Awesome image 2">
+                        <div class="carousel-caption">
+                            <div>
+                                <h2>Sem Tortor Mollis Aenean</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt egestas consequat.</p>
+                                <button type="button" class="btn">EXPLORE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="left carousel-control" href="#product" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#product" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <div id="macho-app" class="row">
+                <div>
+                    <div class="app-content">
+                        <h2>The Macho App</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id odio molestie, sagittis elit a, gravida ipsum. Praesent nec quam risus. Cras imperdiet dignissim nulla, quis efficitur ex vehicula ut. In bibendum elit eu neque facilisis tristique. Maecenas ac tincidunt elit, varius convallis arcu. Nunc massa tortor, viverra quis nulla tristique, pulvinar tempus magna. Aliquam et cursus purus, quis rutrum nisi.</p>
+                        <p>Sed pretium, orci a placerat molestie, elit nibh maximus magna, nec iaculis nunc velit at velit. Donec a lacus in purus condimentum gravida eu pretium erat. Maecenas ligula risus, volutpat ut libero nec, scelerisque tincidunt velit. Fusce enim ex, imperdiet nec mauris at, imperdiet porttitor turpis. Nulla a eleifend urna. Quisque eu gravida lacus. Nullam posuere ac libero ac dapibus. Donec blandit velit non cursus pulvinar. Donec semper pretium commodo.</p>
+                        <button type="button" class="btn">DOWNLOAD THE APP</button>
+                    </div>
+                    <img id="iphone-image" src="./images/iPhone_6.png" alt="iPhone 6" />
+                </div>
+            </div>
+            <div id="projects" class="row">
+                <div class="title col-xs-12">
+                    <h2>Our Works</h2><a href="/works.html">52 works in total</a>
+                </div>
+                <div class="vignette col-xs-12 col-sm-6 col-md-4">
+                    <img src="./images/project1.png" alt="Project 1" />
+                    <div class="text-hover-photo"><div><h2>PROJECT ONE</h2><p>Donec justo orci, facilisis eget imperdiet a, tempor in nunc, donec vestibulum ultrices metus.</p></div></div>
+                </div>
+                <div class="vignette col-xs-12 col-sm-6 col-md-4">
+                    <img src="./images/project2.png" alt="Project 2" />
+                    <div class="text-hover-photo"><div><h2>PROJECT TWO</h2><p>Donec justo orci, facilisis eget imperdiet a, tempor in nunc, donec vestibulum ultrices metus.</p></div></div>
+                </div>
+                <div class="vignette col-xs-12 col-sm-6 col-md-4">
+                    <img src="./images/project3.png" alt="Project 3" />
+                    <div class="text-hover-photo"><div><h2>PROJECT THREE</h2><p>Donec justo orci, facilisis eget imperdiet a, tempor in nunc, donec vestibulum ultrices metus.</p></div></div>
+                </div>
+                <div class="vignette col-xs-12 col-sm-6 col-md-4">
+                    <img src="./images/project4.png" alt="Project 4" />
+                    <div class="text-hover-photo"><div><h2>PROJECT FOUR</h2><p>Donec justo orci, facilisis eget imperdiet a, tempor in nunc, donec vestibulum ultrices metus.</p></div></div>
+                </div>
+                <div class="vignette col-xs-12 col-sm-6 col-md-4">
+                    <img src="./images/project5.png" alt="Project 5" />
+                    <div class="text-hover-photo"><div><h2>PROJECT FIVE</h2><p>Donec justo orci, facilisis eget imperdiet a, tempor in nunc, donec vestibulum ultrices metus.</p></div></div>
+                </div>
+                <div class="vignette col-xs-12 col-sm-6 col-md-4">
+                    <img src="./images/project6.png" alt="Project 6" />
+                    <div class="text-hover-photo"><div><h2>PROJECT SIX</h2><p>Donec justo orci, facilisis eget imperdiet a, tempor in nunc, donec vestibulum ultrices metus.</p></div></div>
+                </div>
+            </div>
+
+            <div id="team" class="row">
+                <div class="title col-xs-12">
+                    <h2>Our Team</h2>
+                </div>
+                <div class="vignette col-xs-6 col-sm-4 col-md-2">
+                    <img src="./images/person1.png" alt="CEO" />
+                    <div class="text-hover-photo"><div><h2>Marsha Thomas</h2><span>CEO</span></div></div>
+                </div>
+                <div class="vignette col-xs-6 col-sm-4 col-md-2">
+                    <img src="./images/person2.png" alt="CEO" />
+                    <div class="text-hover-photo"><div><h2>Marsha Thomas</h2><span>CEO</span></div></div>
+                </div>
+                <div class="vignette col-xs-6 col-sm-4 col-md-2">
+                    <img src="./images/person3.png" alt="CEO" />
+                    <div class="text-hover-photo"><div><h2>Marsha Thomas</h2><span>CEO</span></div></div>
+                </div>
+                <div class="vignette col-xs-6 col-sm-4 col-md-2">
+                    <img src="./images/person4.png" alt="CEO" />
+                    <div class="text-hover-photo"><div><h2>Marsha Thomas</h2><span>CEO</span></div></div>
+                </div>
+                <div class="vignette col-xs-6 col-sm-4 col-md-2">
+                    <img src="./images/person5.png" alt="CEO" />
+                    <div class="text-hover-photo"><div><h2>Marsha Thomas</h2><span>CEO</span></div></div>
+                </div>
+                <div class="vignette col-xs-6 col-sm-4 col-md-2">
+                    <img src="./images/person6.png" alt="CEO" />
+                    <div class="text-hover-photo"><div><h2>Marsha Thomas</h2><span>CEO</span></div></div>
+                </div>
+            </div>
+            <div id="about" class="row">
+                <div id="about-us" class="col-xs-12 col-sm-6">
+                    <div>
+                        <h2>About Us</h2>
+                        <p>Proin neque tortor, eleifend at augue id, commodo tincidunt diam. Integer gravida tortor diam, et eleifend quam aliquet a. Nam lacus erat, accumsan et mi quis, posuere dictum ipsum.</p>
+                        <button type="button" class="btn">CONTACT US</button>
+                    </div>
+                </div>
+                <div id="map" class="col-xs-12 col-sm-6">
+                </div>
+            </div>
+            <div id="footer" class="row">
+                <div id="mobile-footer" class="display-table">
+                    <div class="display-row">
+                        <a href="" class="display-cell"><img src="./images/facebook-icon.png" /></a>
+                        <a href="" class="display-cell"><img src="./images/twitter-icon.png" /></a>
+                        <a href="" class="display-cell"><img src="./images/google-plus-icon.png" /></a>
+                    </div>
+                </div>
+                <div id="desktop-footer">
+                    <div class="footer-logo">MACHO</div>
+                    <div id="footer-links">
+                        <nav>
+                            <ul>
+                                <li><a href="#macho-app"><span>Product</span></a></li>
+                                <li><a href="#projects"><span>Works</span></a></li>
+                                <li><a href="#team"><span>Team</span></a></li>
+                                <li><a href="#about"><span>About</span></a></li>
+                                <li><a href="#contact"><span>Contact Us</span></a></li>
+                            </ul>
+                        </nav>
+                        <div id="social-networks">
+                            <a href=""><img src="./images/facebook-icon.png" /></a>
+                            <a href=""><img src="./images/twitter-icon.png" /></a>
+                            <a href=""><img src="./images/google-plus-icon.png" /></a>
+                        </div>
+                        <span class="clearfix">&nbsp;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/0.1.12/slideout.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxW71VADjGhqR_KmuoGAGQk3ZOqhCKsPA&callback=initMap"></script>
+<script>
+    var mobileMenu = $("#mobile-menu");
+    var slideout = new Slideout({
+        "panel": $("#panel")[0],
+        "menu": mobileMenu[0],
+        "padding": 256,
+        "tolerance": 700
+    });
+
+    $("#hamburger").click(function () {
+        slideout.toggle();
+    });
+    mobileMenu.css("display", "block");
+    $("#mobile-menu a").click(function () {
+        slideout.close();
+    });
+    slideout.on("beforeopen", function () {
+        $("header").addClass("fixed-open");
+    });
+
+    slideout.on("beforeclose", function () {
+        $("header").removeClass("fixed-open");
+    });
+    $(document).on("click", "a", function (event) {
+        event.preventDefault();
+        var href = $(this).attr("href");
+        if (href.match(/^#/)) {
+            $("html, body").animate({
+                scrollTop: $(href).offset().top - 70
+            }, 500);
+        }
+    });
+
+    function initMap () {
+        var location = { lat: 37.4223664, lng: -122.0865947 };
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 17,
+            center: location
+        });
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: "title"
+        });
+        var infowindow = new google.maps.InfoWindow({
+            content: "<div id=\"map-tooltip\"><p>1600 Amphitheatre Parkway<br>Mountain View, CA 94043</p><p><a href=\"mailto:hello@ottono.com\">hello@ottono.com<a></a></p><p><a href=\"tel:16502530000\">+1 650-253-0000</a></p></div>"
+        });
+        infowindow.open(map, marker);
+    }
+
+</script>
+
+</body>
+</html>
